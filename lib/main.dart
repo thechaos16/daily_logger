@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,12 +30,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  String input_text = "";
+  String now = "";
+  final myController = TextEditingController();
 
-  void _incrementCounter() {
+  void _updateString(String update) {
     setState(() {
-      _counter++;
+      input_text = update;
+      now = DateFormat.yyMMdd().format(DateTime.now());
     });
+  }
+
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,24 +54,33 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'testtest',
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'enter something',
+              ),
+              controller: myController,
             ),
             Text(
-              '$_counter',
+              input_text,
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Text(
+              now,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        onPressed: () {
+          _updateString(myController.text);
+        },
+        tooltip: 'Send message',
+        child: const Icon(Icons.send),
       )
     );
   }
